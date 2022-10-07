@@ -12,9 +12,17 @@ li.nav-item{
 }
 
 .modal-preauth{
-    display: none;
+    display: block;
 }
 
 .modal-postauth{
+    display: none;
+}
+
+input{
     display: block;
+    margin: 8px 0;
+    padding: 8px 2px;
+    border-width: 0 0 2px 0;
+    width: 100%;
 }

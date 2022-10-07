@@ -14,5 +14,5 @@ export const routes =[
 export function routing(pathname, hash){
     const route = routes.find(r => r.path == pathname);
     if (route) route.page();
-    else route[0].page();
+    else routes[0].page();
 }
