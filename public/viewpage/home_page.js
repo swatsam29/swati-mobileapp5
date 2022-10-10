@@ -6,6 +6,8 @@ import * as CloudFunctions from '../controller/cloud_functions.js'
 import * as Util from './util.js'
 import * as Constants from '../model/constants.js'
 import * as CloudStorage from '../controller/cloud_storage.js'
+import * as EditProduct from '../controller/edit_product.js'
+
 
 let imageFile2Upload = null;
 
@@ -68,10 +70,19 @@ export async function home_page() {
     for (let i= 0; i < forms.length; i++){
         forms[i].addEventListener('submit', async e=> {
             e.preventDefault();
+            const buttons = e.target.getElementsByTagName('button');
             const submitter = e.target.submitter;
-            const docId= e.target.docId.value;
-            const imageName= e.target.imageName.value;
-
+            if(submitter == 'EDIT'){
+                const label= Util.disableButton(buttons[0]);
+                await EditProduct.edit_product(e.target.docId.value);
+                // await Util.sleep(1000)
+                Util.enableButton(buttons[0], label);
+            } else if(submitter == 'DELETE'){
+                const label= Util.disableButton(buttons[1]);
+                await EditProduct.delete_product(e.target.docId.value, e.target.imageName.value);
+                // await Util.sleep(1000)
+                Util.enableButton(buttons[1], label);
+            }
         })
     }
 }
