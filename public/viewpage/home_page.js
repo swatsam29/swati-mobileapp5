@@ -62,11 +62,18 @@ export async function home_page() {
     products.forEach(p => {
         html += buildProductCard(p)
     })
-
-
-
-
     Elements.root.innerHTML = html;
+
+    const forms= document.getElementsByClassName('form-edit-delete-product');
+    for (let i= 0; i < forms.length; i++){
+        forms[i].addEventListener('submit', async e=> {
+            e.preventDefault();
+            const submitter = e.target.submitter;
+            const docId= e.target.docId.value;
+            const imageName= e.target.imageName.value;
+
+        })
+    }
 }
 
 
@@ -107,6 +114,14 @@ function buildProductCard(product) {
   <div class="card-body">
      <h5 class="card-title">${product.name}</h5>
     <p class="card-text">$ ${product.price.toFixed(2)}<br>${product.summary}</p>
+    <form class="form-edit-delete-product" method= "post">
+        <input type ="hidden" name="docId" value="${product.docId}" >
+        <input type ="hidden" name="imageName" value="${product.imageName}" >
+        <button type="submit" class="btn btn-outline-primary"
+            onclick="this.form.submitter='EDIT'">Edit</button>
+        <button type="submit" class="btn btn-outline-danger"
+            onclick="this.form.submitter='DELETE'">Delete</button>
+    </form>
   </div>
 </div>
     `;
