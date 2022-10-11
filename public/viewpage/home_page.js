@@ -82,6 +82,8 @@ export async function home_page() {
                 await EditProduct.delete_product(e.target.docId.value, e.target.imageName.value);
                 // await Util.sleep(1000)
                 Util.enableButton(buttons[1], label);
+            } else {
+                console.log('No such submiiter', submitter);
             }
         })
     }
@@ -120,7 +122,7 @@ async function addNewProduct(e) {
 
 function buildProductCard(product) {
     return `
-    <div class="card d-inline-flex" style="width: 18rem;">
+    <div id="card-${product.docId}"class="card d-inline-flex" style="width: 18rem;">
   <img src="${product.imageURL}" class="card-img-top">
   <div class="card-body">
      <h5 class="card-title">${product.name}</h5>
