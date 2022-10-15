@@ -3,9 +3,10 @@ import * as CloudStorage from '../controller/cloud_storage.js'
 import * as Util from '../viewpage/util.js'
 import * as Constants from '../model/constants.js'
 import * as Elements from '../viewpage/elements.js'
+import { Product } from '../model/product.js'
 
 let imageFile2Upload;
-
+let product;
 export function addEventListeners(){
 
     Elements.formEditProduct.imageButton.addEventListener('change', e=>{
@@ -22,12 +23,60 @@ export function addEventListeners(){
 
     Elements.formEditProduct.form.addEventListener('submit', async e => {
         e.preventDefault();
+        const button = e.target.getElementsByTagName('button')[0];
+        const label =Util.disableButton(button);
+
+        const newName = e.target.name.value;
+        const newPrice= e.target.price.value;
+        const newSummary = e.target.summary.value;
+
+        const update = new Product();
+        update.docId = e.target.docId.value;
+        if (newName != product.name) update.name= newName;
+        if (newPrice != product.price) update.price = newPrice;
+        if (newSummary != product.summary) update.summary = newSummary;
+
+
+        try{
+            if (imageFile2Upload){
+                const imageInfo = await CloudStorage.uploadImage(imageFile2Upload, e.target.imageName.value);
+                update.imageURL = imageInfo.imageURL;
+            }
+            await CloudFunctions.updateProductDoc(update);
+
+            const cardTag = document.getElementById(`card-${product.docId}`);
+            if (imageFile2Upload){
+                cardTag.getElementsByTagName('img')[0].src = update.imageURL;
+            }
+            if (update.name){
+                cardTag.getElementsByClassName('card-title')[0].innerHTML= update.name;
+            }
+            if (update.price || update.summary){
+                cardTag.getElementsByClassName('card-text')[0].innerHTML = `
+                    ${update.price ? update.price : product.price}<br>
+                    ${update.summary ? update.summary : product.summary}
+                `;
+            }
+
+            const info =`
+                Update: ${update.name ? 'name' : ''} ${update.price ? 'price' : ''}
+                ${update.summary ? 'summary' : ''} ${imageFile2Upload ? 'image' : ''}
+            `;
+
+            Util.info('Update Succcess!', info, Elements.modalEditProduct);
+
+        }catch(e){
+            if (Constants.DEV) console.log(e);
+            Util.info('Update product error', JSON.stringify(e), Elements.modalEditProduct);
+
+        }
+
+        Util.enableButton(button, label);
     })
 }
 
 
 export async function edit_product(docId){
-    let product;
     try{
         product = await CloudFunctions.getProductById(docId);
         if (!product){

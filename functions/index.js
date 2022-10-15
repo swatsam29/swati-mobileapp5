@@ -9,6 +9,7 @@ admin.initializeApp({
 });
 
 const Constants = require('./constants.js'); 
+
 function authorized(email) {
     return Constants.adminEmails.includes(email);
 }
@@ -91,7 +92,7 @@ exports.cfn_getProductById = functions.https.onCall(async (docId, context) => {
 });
 
 exports.cfn_updateProductDoc = functions.https.onCall(async (data, context)=> {
-    //data ==> {docId, updateOject}, updateObject = {key: value}
+    //data ==> {docId, updateObject}, updateObject = {key: value}
     if (!authorized(context.auth.token.email)) {
         if (Constants.DEV) console.log(e);
         throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');
@@ -102,6 +103,31 @@ exports.cfn_updateProductDoc = functions.https.onCall(async (data, context)=> {
     }catch(e){
         if(Constants.DEV) console.log(e);
         throw new functions.https.HttpsError('internal', `updateProductDoc failed: ${JSON.stringify(e)}`);
+    }
+});
 
+exports.cfn_getUserList = functions.https.onCall(async (data, context) => {
+    if (!authorized(context.auth.token.email)) {
+        if (Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');
+    }
+
+
+    const UserList = [];
+    const MAXRESULTS = 2;
+
+    try{
+        let result = await admin.auth().listUsers(MAXRESULTS);
+        UserList.push(...result.users); // ... spread operator
+        let nextPageToken = result.pageToken;
+        while (nextPageToken){
+            result = await admin.auth().listUsers(MAXRESULTS, nextPageToken);
+            UserList.push(...result.users);
+            nextPageToken = result.pageToken;
+        }
+        return UserList;
+    }catch(e){
+        if(Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', `getUserList failed: ${JSON.stringify(e)}`);
     }
 });
