@@ -2,6 +2,7 @@ import { routing } from './controller/route.js'
 import * as FirebaseAuth from './controller/firebase_auth.js'
 import * as HomePage from './viewpage/home_page.js'
 import * as UsersPage from './viewpage/users_page.js'
+import * as EditProduct from './controller/edit_product.js'
 
 
 
@@ -23,3 +24,4 @@ window.addEventListener('popstate', e=> {
 FirebaseAuth.addEventListeners();
 HomePage.addEventListeners();
 UsersPage.addEventListeners();
+EditProduct.addEventListeners();

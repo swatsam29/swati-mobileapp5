@@ -112,7 +112,43 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Product -->
+  <div class="modal fade" id="modal-edit-product" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="modal-edit-product-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modal-edit-product-title">Edit Product</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <form method="post" id="form-edit-product"> 
+            <input type="hidden" name="docId">
+            <input type="hidden" name="imageName">
+            <div>
+              Name: <input type="text" name="name" required minlength="2">
+            </div>
+            <div>
+              Price: <input type="number" name="price" required min="0" step="0.01">
+            </div>
+            <div>
+              Summary:<br> 
+              <textarea name="summary" required minlength="5"></textarea>
+            </div>
+            <div>
+              <img id="form-edit-product-image-tag" height="200" style="display: block;">
+              <input type="file" id="form-edit-product-image-button">
+            </div>
+            <div>
+              <button type="submit" class="btn btn-outline-primary">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 

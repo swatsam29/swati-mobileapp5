@@ -89,3 +89,19 @@ exports.cfn_getProductById = functions.https.onCall(async (docId, context) => {
     }
 
 });
+
+exports.cfn_updateProductDoc = functions.https.onCall(async (data, context)=> {
+    //data ==> {docId, updateOject}, updateObject = {key: value}
+    if (!authorized(context.auth.token.email)) {
+        if (Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');
+    }
+    try{
+        await admin.firestore().collection(Constants.COLLECTION_NAMES.PRODUCTS)
+            .doc(data.docId).update(data.updateObject)
+    }catch(e){
+        if(Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', `updateProductDoc failed: ${JSON.stringify(e)}`);
+
+    }
+});
