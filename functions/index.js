@@ -138,14 +138,14 @@ exports.cfn_updateUser = functions.https.onCall(async (data, context) => {
     try{
         const uid = data.uid;
         const update = data.update;
-        await admin.auth().updateUser(uid, update);
+        await admin.auth().updateUser(uid, update); 
     }catch(e){
         if(Constants.DEV) console.log(e);
         throw new functions.https.HttpsError('internal', `updateUser failed: ${JSON.stringify(e)}`);
     }
 });
 
-exports.cfn_deleteUser - functions.https.onCall(async (uid, context)=> {
+exports.cfn_deleteUser = functions.https.onCall(async (uid, context)=> {
     if (!authorized(context.auth.token.email)) {
         if (Constants.DEV) console.log(e);
         throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');

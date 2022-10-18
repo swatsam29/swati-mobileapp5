@@ -72,7 +72,7 @@ async function toggleDisableUser(form){
    const uid = form.uid.value;
    const disabled = form.disabled.value;
    const update = {
-       disabled: disabled == 'true' ? false : true,
+       disabled: disabled == 'true' ?  false : true,
    }
    document.getElementById(`user-status-${uid}`).innerHTML= `${update.disabled ? 'Disabled': 'Active'}`;
    Util.info('Status Toggled!', `Disabled: ${update.disabled}`);
@@ -92,7 +92,7 @@ async function deleteUser(form){
    const uid= form.uid.value;
    try{
         await CloudFunctions.deleteUser(uid);
-        document.getElementById(`user-row-${user.uid}`).remove();
+        document.getElementById(`user-row-${uid}`).remove();
         Util.info('The user deleted!', `UID= ${uid}`)
    }catch(e){
         if(Constants.DEV) console.log(e);
@@ -103,7 +103,7 @@ async function deleteUser(form){
 
 function buildUserRow(user) {
     return `
-    <tr>
+    <tr id= "user-row-${user.uid}" >
         <td>${user.email}</td>
         <td id="user-status-${user.uid}">${user.disabled ? 'Disabled' : 'Active'}</td>
         <td>
