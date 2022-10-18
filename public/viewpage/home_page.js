@@ -83,7 +83,7 @@ export async function home_page() {
                 // await Util.sleep(1000)
                 Util.enableButton(buttons[1], label);
             } else {
-                console.log('No such submiiter', submitter);
+                console.log('No such submitter', submitter);
             }
         })
     }

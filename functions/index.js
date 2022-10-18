@@ -111,11 +111,8 @@ exports.cfn_getUserList = functions.https.onCall(async (data, context) => {
         if (Constants.DEV) console.log(e);
         throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');
     }
-
-
     const UserList = [];
     const MAXRESULTS = 2;
-
     try{
         let result = await admin.auth().listUsers(MAXRESULTS);
         UserList.push(...result.users); // ... spread operator
@@ -130,4 +127,34 @@ exports.cfn_getUserList = functions.https.onCall(async (data, context) => {
         if(Constants.DEV) console.log(e);
         throw new functions.https.HttpsError('internal', `getUserList failed: ${JSON.stringify(e)}`);
     }
+});
+
+exports.cfn_updateUser = functions.https.onCall(async (data, context) => {
+    // data => {uid, update}, update = {key1: value1, key2: value2...}
+    if (!authorized(context.auth.token.email)) {
+        if (Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');
+    }
+    try{
+        const uid = data.uid;
+        const update = data.update;
+        await admin.auth().updateUser(uid, update);
+    }catch(e){
+        if(Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', `updateUser failed: ${JSON.stringify(e)}`);
+    }
+});
+
+exports.cfn_deleteUser - functions.https.onCall(async (uid, context)=> {
+    if (!authorized(context.auth.token.email)) {
+        if (Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('permission-denied', 'Only admin may invoke updateProductDoc function');
+    }
+    try{
+       await admin.auth().deleteUser(uid); 
+    }catch(e){
+        if(Constants.DEV) console.log(e);
+        throw new functions.https.HttpsError('internal', `deleteUser failed: ${JSON.stringify(e)}`);
+    }
+
 });
