@@ -53,7 +53,7 @@ export function addEventListeners(){
             }
             if (update.price || update.summary){
                 cardTag.getElementsByClassName('card-text')[0].innerHTML = `
-                    ${update.price ? update.price : product.price}<br>
+                    $ ${update.price ? update.price : product.price}<br>
                     ${update.summary ? update.summary : product.summary}
                 `;
             }
